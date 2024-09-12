@@ -27,6 +27,12 @@ private slots:
 
     void on_actionSelect_color_triggered();
 
+    void on_red_slider_valueChanged(int value);
+
+    void on_green_slider_valueChanged(int value);
+
+    void on_blue_slider_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
     QColor current_color;
@@ -34,5 +40,6 @@ private:
     QVector <float> rgb;
     QVector <float> cmyk;
     QVector <float> hsl;
+    void update_rgb();
 };
 #endif // MAINWINDOW_H

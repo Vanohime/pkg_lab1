@@ -193,6 +193,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->cmyk_line->setAutoFillBackground(true);
     ui->rgb_line->setAutoFillBackground(true);
     ui->hsl_line->setAutoFillBackground(true);
+    ui->red_sl_val->setText(QString::number(ui->red_slider->value()));
+    ui->green_sl_val->setText(QString::number(ui->green_slider->value()));
+    ui->blue_sl_val->setText(QString::number(ui->blue_slider->value()));
 }
 
 MainWindow::~MainWindow()
@@ -219,6 +222,15 @@ void MainWindow::paintEvent(QPaintEvent *)
         ui->message_label->setStyleSheet(colorStyleB);
     }
 
+}
+
+void MainWindow::update_rgb()
+{
+    bool ok1 = true;
+    QString c = vector_to_string(rgb, ok1);
+    if (ok1)
+        ui->rgb_line->setText(c);
+    on_rgb_line_textEdited(c);
 }
 
 
@@ -344,5 +356,29 @@ void MainWindow::on_actionSelect_color_triggered()
     ui->rgb_line->setText(s);
     on_rgb_line_textEdited(s);
     update();
+}
+
+
+void MainWindow::on_red_slider_valueChanged(int value)
+{
+    ui->red_sl_val->setText(QString::number(ui->red_slider->value()));
+    rgb[0] = value;
+    update_rgb();
+}
+
+
+void MainWindow::on_green_slider_valueChanged(int value)
+{
+    ui->green_sl_val->setText(QString::number(ui->green_slider->value()));
+    rgb[1] = value;
+    update_rgb();
+}
+
+
+void MainWindow::on_blue_slider_valueChanged(int value)
+{
+    ui->blue_sl_val->setText(QString::number(ui->blue_slider->value()));
+    rgb[2] = value;
+    update_rgb();
 }
 
