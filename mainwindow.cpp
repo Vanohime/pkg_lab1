@@ -273,7 +273,13 @@ void MainWindow::on_rgb_line_textEdited(const QString &arg1)
     QString c1 = vector_to_string(hsl, ok2);
     if(ok2)
         ui->hsl_line->setText(c1);
+
+    ui->red_slider->setValue(rgb[0]);
+    ui->green_slider->setValue(rgb[1]);
+    ui->blue_slider->setValue(rgb[2]);
+
     update();
+
 }
 
 
@@ -313,6 +319,10 @@ void MainWindow::on_cmyk_line_textEdited(const QString &arg1)
             ui->message_label->setText("");
 
     }
+    ui->red_slider->setValue(rgb[0]);
+    ui->green_slider->setValue(rgb[1]);
+    ui->blue_slider->setValue(rgb[2]);
+
     update();
 }
 
@@ -352,6 +362,11 @@ void MainWindow::on_hsl_line_textEdited(const QString &arg1)
     QString c1 = vector_to_string(cmyk, ok2);
     if (ok2)
         ui->cmyk_line->setText(c1);
+
+    ui->red_slider->setValue(rgb[0]);
+    ui->green_slider->setValue(rgb[1]);
+    ui->blue_slider->setValue(rgb[2]);
+
     update();
 }
 
