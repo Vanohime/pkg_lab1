@@ -215,11 +215,23 @@ void MainWindow::paintEvent(QPaintEvent *)
         ui->label_2->setStyleSheet(colorStyleW);
         ui->label_3->setStyleSheet(colorStyleW);
         ui->message_label->setStyleSheet(colorStyleW);
+        ui->red_sl_val->setStyleSheet(colorStyleW);
+        ui->green_sl_val->setStyleSheet(colorStyleW);
+        ui->blue_sl_val->setStyleSheet(colorStyleW);
+        ui->label_4->setStyleSheet(colorStyleW);
+        ui->label_5->setStyleSheet(colorStyleW);
+        ui->label_6->setStyleSheet(colorStyleW);
     } else {
         ui->label->setStyleSheet(colorStyleB);
         ui->label_2->setStyleSheet(colorStyleB);
         ui->label_3->setStyleSheet(colorStyleB);
         ui->message_label->setStyleSheet(colorStyleB);
+        ui->red_sl_val->setStyleSheet(colorStyleB);
+        ui->green_sl_val->setStyleSheet(colorStyleB);
+        ui->blue_sl_val->setStyleSheet(colorStyleB);
+        ui->label_4->setStyleSheet(colorStyleB);
+        ui->label_5->setStyleSheet(colorStyleB);
+        ui->label_6->setStyleSheet(colorStyleB);
     }
 
 }
