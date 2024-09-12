@@ -382,6 +382,11 @@ void MainWindow::on_actionSelect_color_triggered()
     QString s = vector_to_string(rgb, ok);
     ui->rgb_line->setText(s);
     on_rgb_line_textEdited(s);
+
+    ui->red_slider->setValue(rgb[0]);
+    ui->green_slider->setValue(rgb[1]);
+    ui->blue_slider->setValue(rgb[2]);
+
     update();
 }
 
