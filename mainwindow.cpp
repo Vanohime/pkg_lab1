@@ -6,19 +6,20 @@
 #include <QPaintEvent>
 #include <QColorDialog>
 #include <QPalette>
+#include <QDebug>
 
-float roundToTwoDecimals(float value) {
+double roundToTwoDecimals(double value) {
     return std::round(value * 100) / 100;
 }
 
-QVector<float> string_to_vector(QString s, bool& is_valid) {
-    QVector<float> res;
+QVector<double> string_to_vector(QString s, bool& is_valid) {
+    QVector<double> res;
     if(s == "") {
         is_valid = false;
         return res;
     }
     for (auto c : s) {
-        if((c > '9' || c < '0') && c != '%' && c != ' ' && c != ',' && c!= '.'){
+        if((c > '9' || c < '0') && c != ' ' && c != ',' && c!= '.'){
             is_valid = false;
             return res;
         }
@@ -38,32 +39,35 @@ QVector<float> string_to_vector(QString s, bool& is_valid) {
         bool ok;
         double number = part.toDouble(&ok);
         if (ok) {
-            res.push_back(number);
+            res.push_back((double)number);
         } else {
             is_valid = false;
             return res;
         }
+    }
+    for (int i = 0; i < res.size(); i++) {
+        //res[i] = roundToTwoDecimals(res[i]);
     }
     if(res.empty())
         is_valid = false;
     return res;
 }
 
-QString vector_to_string(QVector<float> arr, bool& is_valid) {
+QString vector_to_string(QVector<double> arr, bool& is_valid) {
     QString ans;
     if (arr.empty()){
         is_valid = false;
         return ans;
     }
     for (int i = 0; i < arr.size(); i++) {
-        arr[i] = roundToTwoDecimals(arr[i]);
+        //arr[i] = roundToTwoDecimals(arr[i]);
     }
     for(auto n : arr) {
         if(!(n - (int)n)){
             ans += QString::number((int)n);
         }
         else {
-             ans += QString::number(n);
+            ans += QString::number(n);
         }
         ans += ", ";
     }
@@ -71,11 +75,11 @@ QString vector_to_string(QVector<float> arr, bool& is_valid) {
     return ans;
 }
 
-QVector <float> rgb_to_cmyk(const QVector <float>& rgb_arg) {
-    QVector<float> cmyk_1(4, 0.0);
-    float r = rgb_arg[0];
-    float g = rgb_arg[1];
-    float b = rgb_arg[2];
+QVector <double> rgb_to_cmyk(const QVector <double>& rgb_arg) {
+    QVector<double> cmyk_1(4, 0.0);
+    double r = rgb_arg[0];
+    double g = rgb_arg[1];
+    double b = rgb_arg[2];
     if (r == 0 && g == 0 && b == 0) {
         cmyk_1[3] = 1;
         return cmyk_1;
@@ -83,7 +87,7 @@ QVector <float> rgb_to_cmyk(const QVector <float>& rgb_arg) {
     r /= 255.0;
     g /= 255.0;
     b /= 255.0;
-    float k = 1 - std::max({r, g, b});
+    double k = 1 - std::max({r, g, b});
     cmyk_1[0] = (1 - r - k) / (1 - k);
     cmyk_1[1] = (1 - g - k) / (1 - k);
     cmyk_1[2] = (1 - b - k) / (1 - k);
@@ -91,28 +95,28 @@ QVector <float> rgb_to_cmyk(const QVector <float>& rgb_arg) {
     return cmyk_1;
 }
 
-QVector <float> cmyk_to_rgb(const QVector <float>& arg) {
-    QVector<float> res(3);
+QVector <double> cmyk_to_rgb(const QVector <double>& arg) {
+    QVector<double> res(3);
     res[0] = std::round(255 * (1 - arg[0]) * (1 - arg[3]));
     res[1] = std::round(255 * (1 - arg[1]) * (1 - arg[3]));
     res[2] = std::round(255 * (1 - arg[2]) * (1 - arg[3]));
     return res;
 }
 
-QVector <float> rgb_to_hsl (const QVector <float>& arg){
-    QVector<float> res(3, 0.0);
-    float r = arg[0] / 255.0;
-    float g = arg[1] / 255.0;
-    float b = arg[2] / 255.0;
+QVector <double> rgb_to_hsl (const QVector <double>& arg){
+    QVector<double> res(3, 0.0);
+    double r = arg[0] / 255.0;
+    double g = arg[1] / 255.0;
+    double b = arg[2] / 255.0;
 
-    float M = std::max({r, g, b});
-    float m = std::min({r, g, b});
+    double M = std::max({r, g, b});
+    double m = std::min({r, g, b});
 
-    float c = M - m;
+    double c = M - m;
 
     if(c)
     {
-        float h_dash;
+        double h_dash;
         if(M == r) {
             h_dash =(g - b) / c  + (g < b ? 6 : 0);
         }
@@ -134,51 +138,47 @@ QVector <float> rgb_to_hsl (const QVector <float>& arg){
     return res;
 }
 
-QVector <float> hsl_to_rgb (const QVector <float>& arg){
-   QVector <float> res(3, 0);
-   float c = (1 - abs(2*arg[2] - 1)) * arg[1];
-   float h = arg[0] / 60;
-   float h_m = h;
-   while (h_m >=2)
-       h_m -= 2;
-   float x = c * (1 - abs (h_m - 1));
+QVector<double> hsl_to_rgb(const QVector<double>& hsl) {
+    QVector<double> rgb(3, 0.0);
 
-   if (h >=0 && h <= 1){
-       res[0] = c;
-       res[1] = x;
-   }
-   if (h >=1 && h <= 2){
-       res[0] = x;
-       res[1] = c;
-   }
-   if (h >=2 && h <= 3){
-       res[1] = c;
-       res[2] = x;
-   }
-   if (h >=3 && h <= 4){
-       res[2] = c;
-       res[1] = x;
-   }
-   if (h >=4 && h <= 5){
-       res[0] = x;
-       res[2] = c;
-   }
-   if (h >=5 && h <= 6){
-       res[0] = c;
-       res[2] = x;
-   }
-   float m = arg[2]  - c/2;
-   res[0] += m;
-   res[0] *= 255;
-   res[0] = std::round(res[0]);
-   res[1] += m;
-   res[1] *= 255;
-   res[1] = std::round(res[1]);
-   res[2] += m;
-   res[2] *= 255;
-   res[2] = std::round(res[2]);
-   return res;
+    double h = hsl[0];
+    double s = hsl[1];
+    double l = hsl[2];
+
+    double c = (1 - std::abs(2 * l - 1)) * s;
+    double h_prime = h / 60.0;
+    double x = c * (1 - std::abs(fmod(h_prime, 2) - 1));
+
+    double r1 = 0, g1 = 0, b1 = 0;
+
+    if (0 <= h_prime && h_prime < 1) {
+        r1 = c;
+        g1 = x;
+    } else if (1 <= h_prime && h_prime < 2) {
+        r1 = x;
+        g1 = c;
+    } else if (2 <= h_prime && h_prime < 3) {
+        g1 = c;
+        b1 = x;
+    } else if (3 <= h_prime && h_prime < 4) {
+        g1 = x;
+        b1 = c;
+    } else if (4 <= h_prime && h_prime < 5) {
+        r1 = x;
+        b1 = c;
+    } else if (5 <= h_prime && h_prime < 6) {
+        r1 = c;
+        b1 = x;
+    }
+
+    double m = l - c / 2;
+    rgb[0] = (r1 + m) * 255;
+    rgb[1] = (g1 + m) * 255;
+    rgb[2] = (b1 + m) * 255;
+
+    return rgb;
 }
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -186,9 +186,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     current_color = Qt::white;
-    rgb = QVector<float>(3, 0);
-    hsl = QVector<float>(3, 0);
-    cmyk = QVector<float>(4, 0);
+    rgb = QVector<double>(3, 0);
+    hsl = QVector<double>(3, 0);
+    cmyk = QVector<double>(4, 0);
     this->setAutoFillBackground(true);
     ui->cmyk_line->setAutoFillBackground(true);
     ui->rgb_line->setAutoFillBackground(true);
@@ -203,7 +203,27 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::paintEvent(QPaintEvent *)
+void MainWindow::update_rgb()
+{
+    bool ok1 = true;
+    QString c = vector_to_string(rgb, ok1);
+    if (ok1)
+        ui->rgb_line->setText(c);
+    on_rgb_line_textEdited(c);
+}
+
+void MainWindow::update_sliders()
+{
+    ui->red_slider->setValue(rgb[0]);
+    ui->green_slider->setValue(rgb[1]);
+    ui->blue_slider->setValue(rgb[2]);
+
+    ui->red_sl_val->setText(QString::number(ui->red_slider->value()));
+    ui->green_sl_val->setText(QString::number(ui->green_slider->value()));
+    ui->blue_sl_val->setText(QString::number(ui->blue_slider->value()));
+}
+
+void MainWindow::update_color()
 {
     QPalette pal;
     pal.setColor(QPalette :: Window, current_color);
@@ -236,21 +256,11 @@ void MainWindow::paintEvent(QPaintEvent *)
 
 }
 
-void MainWindow::update_rgb()
-{
-    bool ok1 = true;
-    QString c = vector_to_string(rgb, ok1);
-    if (ok1)
-        ui->rgb_line->setText(c);
-    on_rgb_line_textEdited(c);
-}
-
-
 void MainWindow::on_rgb_line_textEdited(const QString &arg1)
 {
     ui->message_label->setText("");
     bool ok = true;
-    QVector<float> nums(string_to_vector(arg1, ok));
+    QVector<double> nums(string_to_vector(arg1, ok));
     if(!ok)
         return;
     if(nums.size()!= 3)
@@ -274,19 +284,16 @@ void MainWindow::on_rgb_line_textEdited(const QString &arg1)
     if(ok2)
         ui->hsl_line->setText(c1);
 
-    ui->red_slider->setValue(rgb[0]);
-    ui->green_slider->setValue(rgb[1]);
-    ui->blue_slider->setValue(rgb[2]);
+    update_sliders();
 
-    update();
+    update_color();
 
 }
-
 
 void MainWindow::on_cmyk_line_textEdited(const QString &arg1)
 {
     bool ok = true;
-    QVector<float> nums(string_to_vector(arg1, ok));
+    QVector<double> nums(string_to_vector(arg1, ok));
     if(!ok)
         return;
     if(nums.size()!= 4)
@@ -311,27 +318,23 @@ void MainWindow::on_cmyk_line_textEdited(const QString &arg1)
     if(ok2)
         ui->hsl_line->setText(c1);
 
-    QVector<float> test(rgb_to_cmyk(rgb));
+    QVector<double> test(rgb_to_cmyk(rgb));
     for(int i = 0; i < 4; i++){
         if(abs(test[i] - cmyk[i]) > 0.01)
             ui->message_label->setText("Внимание! Произойдет потеря цвета");
         else
             ui->message_label->setText("");
-
     }
-    ui->red_slider->setValue(rgb[0]);
-    ui->green_slider->setValue(rgb[1]);
-    ui->blue_slider->setValue(rgb[2]);
 
-    update();
+    update_sliders();
+    update_color();
 }
-
 
 void MainWindow::on_hsl_line_textEdited(const QString &arg1)
 {
     ui->message_label->setText("");
     bool ok = true;
-    QVector<float> nums(string_to_vector(arg1, ok));
+    QVector<double> nums(string_to_vector(arg1, ok));
     if(!ok)
         return;
     if(nums.size()!= 3)
@@ -342,11 +345,7 @@ void MainWindow::on_hsl_line_textEdited(const QString &arg1)
         return;
     if(nums[2] > 1 || nums[2] < 0)
         return;
-
     hsl = nums;
-    /*QColor col;
-    col.setHsl(hsl[0], hsl[1], hsl[2]);
-    current_color = col;*/
     current_color = QColor::fromHslF(hsl[0]/360, hsl[1], hsl[2]);
 
     rgb = hsl_to_rgb(hsl);
@@ -355,21 +354,16 @@ void MainWindow::on_hsl_line_textEdited(const QString &arg1)
     if (ok1)
         ui->rgb_line->setText(c);
 
-    //current_color = QColor(rgb[0], rgb[1], rgb[2]);
-
     cmyk = rgb_to_cmyk(rgb);
     bool ok2 = true;
     QString c1 = vector_to_string(cmyk, ok2);
     if (ok2)
         ui->cmyk_line->setText(c1);
 
-    ui->red_slider->setValue(rgb[0]);
-    ui->green_slider->setValue(rgb[1]);
-    ui->blue_slider->setValue(rgb[2]);
+    update_sliders();
 
-    update();
+    update_color();
 }
-
 
 void MainWindow::on_actionSelect_color_triggered()
 {
@@ -381,34 +375,29 @@ void MainWindow::on_actionSelect_color_triggered()
 
     update_rgb();
 
-    ui->red_slider->setValue(rgb[0]);
-    ui->green_slider->setValue(rgb[1]);
-    ui->blue_slider->setValue(rgb[2]);
+    update_sliders();
 
-    update();
+    update_color();
 }
 
-
-void MainWindow::on_red_slider_valueChanged(int value)
+void MainWindow::on_red_slider_sliderMoved(int position)
 {
-    ui->red_sl_val->setText(QString::number(ui->red_slider->value()));
-    rgb[0] = value;
+    ui->red_sl_val->setText(QString::number(position));
+    rgb[0] = position;
     update_rgb();
 }
 
-
-void MainWindow::on_green_slider_valueChanged(int value)
+void MainWindow::on_green_slider_sliderMoved(int position)
 {
-    ui->green_sl_val->setText(QString::number(ui->green_slider->value()));
-    rgb[1] = value;
+    ui->green_sl_val->setText(QString::number(position));
+    rgb[1] = position;
     update_rgb();
 }
 
-
-void MainWindow::on_blue_slider_valueChanged(int value)
+void MainWindow::on_blue_slider_sliderMoved(int position)
 {
-    ui->blue_sl_val->setText(QString::number(ui->blue_slider->value()));
-    rgb[2] = value;
+    ui->blue_sl_val->setText(QString::number(position));
+    rgb[2] = position;
     update_rgb();
 }
 
