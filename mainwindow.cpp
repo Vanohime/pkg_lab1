@@ -378,10 +378,8 @@ void MainWindow::on_actionSelect_color_triggered()
     rgb[0] = current_color.red();
     rgb[1] = current_color.green();
     rgb[2] = current_color.blue();
-    bool ok = true;
-    QString s = vector_to_string(rgb, ok);
-    ui->rgb_line->setText(s);
-    on_rgb_line_textEdited(s);
+
+    update_rgb();
 
     ui->red_slider->setValue(rgb[0]);
     ui->green_slider->setValue(rgb[1]);
