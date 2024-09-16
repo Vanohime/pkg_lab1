@@ -42,10 +42,10 @@ constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::string
     "on_cmyk_line_textEdited",
     "on_hsl_line_textEdited",
     "on_actionSelect_color_triggered",
-    "on_red_slider_valueChanged",
-    "value",
-    "on_green_slider_valueChanged",
-    "on_blue_slider_valueChanged"
+    "on_red_slider_sliderMoved",
+    "position",
+    "on_green_slider_sliderMoved",
+    "on_blue_slider_sliderMoved"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -106,13 +106,13 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
         // method 'on_actionSelect_color_triggered'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        // method 'on_red_slider_valueChanged'
+        // method 'on_red_slider_sliderMoved'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
-        // method 'on_green_slider_valueChanged'
+        // method 'on_green_slider_sliderMoved'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
-        // method 'on_blue_slider_valueChanged'
+        // method 'on_blue_slider_sliderMoved'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>
     >,
@@ -129,9 +129,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->on_cmyk_line_textEdited((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         case 2: _t->on_hsl_line_textEdited((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         case 3: _t->on_actionSelect_color_triggered(); break;
-        case 4: _t->on_red_slider_valueChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 5: _t->on_green_slider_valueChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 6: _t->on_blue_slider_valueChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 4: _t->on_red_slider_sliderMoved((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 5: _t->on_green_slider_sliderMoved((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 6: _t->on_blue_slider_sliderMoved((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         default: ;
         }
     }

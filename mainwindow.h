@@ -27,19 +27,20 @@ private slots:
 
     void on_actionSelect_color_triggered();
 
-    void on_red_slider_valueChanged(int value);
+    void on_red_slider_sliderMoved(int position);
 
-    void on_green_slider_valueChanged(int value);
+    void on_green_slider_sliderMoved(int position);
 
-    void on_blue_slider_valueChanged(int value);
+    void on_blue_slider_sliderMoved(int position);
 
 private:
     Ui::MainWindow *ui;
     QColor current_color;
-    void paintEvent(QPaintEvent*) override;
-    QVector <float> rgb;
-    QVector <float> cmyk;
-    QVector <float> hsl;
+    QVector <double> rgb;
+    QVector <double> cmyk;
+    QVector <double> hsl;
     void update_rgb();
+    void update_sliders();
+    void update_color();
 };
 #endif // MAINWINDOW_H
