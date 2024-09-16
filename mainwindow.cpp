@@ -179,7 +179,6 @@ QVector<double> hsl_to_rgb(const QVector<double>& hsl) {
     return rgb;
 }
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
