@@ -46,7 +46,7 @@ QVector<double> string_to_vector(QString s, bool& is_valid) {
         }
     }
     for (int i = 0; i < res.size(); i++) {
-        //res[i] = roundToTwoDecimals(res[i]);
+        res[i] = roundToTwoDecimals(res[i]);
     }
     if(res.empty())
         is_valid = false;
@@ -60,7 +60,7 @@ QString vector_to_string(QVector<double> arr, bool& is_valid) {
         return ans;
     }
     for (int i = 0; i < arr.size(); i++) {
-        //arr[i] = roundToTwoDecimals(arr[i]);
+        arr[i] = roundToTwoDecimals(arr[i]);
     }
     for(auto n : arr) {
         if(!(n - (int)n)){
@@ -229,7 +229,7 @@ void MainWindow::update_color()
     this->setPalette(pal);
     QString colorStyleW = "color: rgb(255, 255, 255);";
     QString colorStyleB = "color: rgb(0, 0, 0);";
-    if (cmyk[3] > 0.50) {
+    if (cmyk[3] >= 0.50) {
         ui->label->setStyleSheet(colorStyleW);
         ui->label_2->setStyleSheet(colorStyleW);
         ui->label_3->setStyleSheet(colorStyleW);
@@ -319,8 +319,11 @@ void MainWindow::on_cmyk_line_textEdited(const QString &arg1)
 
     QVector<double> test(rgb_to_cmyk(rgb));
     for(int i = 0; i < 4; i++){
-        if(abs(test[i] - cmyk[i]) > 0.01)
-            ui->message_label->setText("Внимание! Произойдет потеря цвета");
+        if(abs(test[i] - cmyk[i]) > 0.01) {
+            QFont f( "Arial", 18, QFont::Bold);
+            ui->message_label->setFont( f);
+            ui->message_label->setText("Внимание! Потеря цвета");
+        }
         else
             ui->message_label->setText("");
     }
